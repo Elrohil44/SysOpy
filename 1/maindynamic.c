@@ -190,5 +190,7 @@ int main()
   printf("Usuwanie DL:\n");
   (*deleteDLBook)(dlbook);
   print_times();
+  int state = dlclose(lib);
+  if(state) return 1;
   return 0;
 }

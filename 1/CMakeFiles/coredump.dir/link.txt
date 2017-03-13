@@ -1,0 +1,1 @@
+/usr/bin/cc  -g -O3 -Wall -Wpedantic   CMakeFiles/coredump.dir/maincoredump.c.o  -o coredump libstatic.a 

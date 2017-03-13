@@ -1,0 +1,10 @@
+/home/student/Desktop/SysOpy/1/CMakeFiles/edit_cache.dir
+/home/student/Desktop/SysOpy/1/CMakeFiles/rebuild_cache.dir
+/home/student/Desktop/SysOpy/1/CMakeFiles/coredump.dir
+/home/student/Desktop/SysOpy/1/CMakeFiles/test.dir
+/home/student/Desktop/SysOpy/1/CMakeFiles/main_shared.dir
+/home/student/Desktop/SysOpy/1/CMakeFiles/main_static.dir
+/home/student/Desktop/SysOpy/1/CMakeFiles/dynamic.dir
+/home/student/Desktop/SysOpy/1/CMakeFiles/main_dynamic.dir
+/home/student/Desktop/SysOpy/1/CMakeFiles/static.dir
+/home/student/Desktop/SysOpy/1/CMakeFiles/shared.dir

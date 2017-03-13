@@ -80,6 +80,7 @@ void deleteBSTBook(BSTBook* b)
 {
   if (b==NULL) return;
   if(b->c != NULL) deleteTree(b->c);
+  b->c=NULL;
   free(b);
 }
 
@@ -102,6 +103,7 @@ void deleteDLBook(DLBook* b)
     freeContact(b->c->c);
     free(b->c);
   }
+  b->c=NULL;
   free(b);
 }
 
@@ -250,7 +252,7 @@ void deleteBSTContact(BSTBook* b, BSTContact* c)
 }
 void deleteDLContact(DLBook* b, DLContact* c)
 {
-  if(c==NULL) exit;
+  if(c==NULL) return;
   freeContact(c->c);
   if (c==b->c)
   {

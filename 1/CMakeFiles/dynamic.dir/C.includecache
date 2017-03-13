@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/student/Desktop/SysOpy/1/lib/contactBook.c
+contactBook.h
+/home/student/Desktop/SysOpy/1/lib/contactBook.h
+string.h
+-
+stdlib.h
+-
+stdio.h
+-
+
+/home/student/Desktop/SysOpy/1/lib/contactBook.h
+

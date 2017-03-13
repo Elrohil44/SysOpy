@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC  -g -O3 -Wall -Wpedantic  -shared  -o libdynamic.so CMakeFiles/dynamic.dir/lib/contactBook.c.o 

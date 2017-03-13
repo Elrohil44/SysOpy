@@ -1,0 +1,2 @@
+/usr/bin/ar qc libstatic.a  CMakeFiles/static.dir/contactBook.c.o
+/usr/bin/ranlib libstatic.a

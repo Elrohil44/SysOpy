@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/student/Desktop/SysOpy/1/lib/contactBook.h
+
+/home/student/Desktop/SysOpy/1/main.c
+lib/contactBook.h
+/home/student/Desktop/SysOpy/1/lib/contactBook.h
+stdlib.h
+-
+time.h
+-
+stdio.h
+-
+sys/times.h
+-
+

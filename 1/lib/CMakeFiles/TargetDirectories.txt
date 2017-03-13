@@ -1,0 +1,4 @@
+/home/student/Desktop/SysOpy/1/lib/CMakeFiles/rebuild_cache.dir
+/home/student/Desktop/SysOpy/1/lib/CMakeFiles/edit_cache.dir
+/home/student/Desktop/SysOpy/1/lib/CMakeFiles/static.dir
+/home/student/Desktop/SysOpy/1/lib/CMakeFiles/shared.dir
