@@ -102,20 +102,20 @@ int main()
   printf("Inicjacja:\n");
   srand(time(NULL));
   void* lib;
-  lib = dlopen("libshared.so", RTLD_NOW);
-
+  lib = dlopen("./libdynamic.so", RTLD_NOW);
   *(void **)(&createBSTBook) = dlsym(lib,"createBSTBook");
   *(void **)(&addBSTContact) = dlsym(lib,"addBSTContact");
   *(void **)(&deleteBSTContact) = dlsym(lib,"deleteBSTContact");
   *(void **)(&searchBSTBook) = dlsym(lib,"searchBSTBook");
   *(void **)(&rebuild) = dlsym(lib,"rebuild");
+  *(void **)(&deleteBSTBook) = dlsym(lib,"deleteBSTBook");
 
   *(void **)(&createDLBook) = dlsym(lib,"createDLBook");
   *(void **)(&addDLContact) = dlsym(lib,"addDLContact");
   *(void **)(&deleteDLContact) = dlsym(lib,"deleteDLContact");
   *(void **)(&searchDLBook) = dlsym(lib,"searchDLBook");
   *(void **)(&sort) = dlsym(lib,"sort");
-
+  *(void **)(&deleteDLBook) = dlsym(lib,"deleteDLBook");
 
   const char* s[] = {
     "12324","2132","13287","09702","123213",

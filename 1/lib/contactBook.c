@@ -300,7 +300,7 @@ DLContact* searchDLBook(DLBook* b,const char* name)
   }
   return c;
 }
-int i=0;
+
 void addBSTNode (BSTContact** root, BSTContact* node, int primaryid)
 {
   if (node==NULL) return;
