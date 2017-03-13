@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/student/Desktop/1
+CMAKE_SOURCE_DIR = /home/student/Desktop/SysOpy/1
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/student/Desktop/1
+CMAKE_BINARY_DIR = /home/student/Desktop/SysOpy/1
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -73,9 +73,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/Desktop/1/CMakeFiles /home/student/Desktop/1/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/Desktop/SysOpy/1/CMakeFiles /home/student/Desktop/SysOpy/1/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/Desktop/1/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/Desktop/SysOpy/1/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -103,73 +103,163 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named ContactBookLibdl
+# Target rules for targets named dynamic
 
 # Build rule for target.
-ContactBookLibdl: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 ContactBookLibdl
-.PHONY : ContactBookLibdl
+dynamic: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 dynamic
+.PHONY : dynamic
 
 # fast build rule for target.
-ContactBookLibdl/fast:
-	$(MAKE) -f CMakeFiles/ContactBookLibdl.dir/build.make CMakeFiles/ContactBookLibdl.dir/build
-.PHONY : ContactBookLibdl/fast
+dynamic/fast:
+	$(MAKE) -f CMakeFiles/dynamic.dir/build.make CMakeFiles/dynamic.dir/build
+.PHONY : dynamic/fast
 
 #=============================================================================
-# Target rules for targets named ContactBookLibso
+# Target rules for targets named main_dynamic
 
 # Build rule for target.
-ContactBookLibso: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 ContactBookLibso
-.PHONY : ContactBookLibso
+main_dynamic: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 main_dynamic
+.PHONY : main_dynamic
 
 # fast build rule for target.
-ContactBookLibso/fast:
-	$(MAKE) -f CMakeFiles/ContactBookLibso.dir/build.make CMakeFiles/ContactBookLibso.dir/build
-.PHONY : ContactBookLibso/fast
+main_dynamic/fast:
+	$(MAKE) -f CMakeFiles/main_dynamic.dir/build.make CMakeFiles/main_dynamic.dir/build
+.PHONY : main_dynamic/fast
 
 #=============================================================================
-# Target rules for targets named ContactBookLibst
+# Target rules for targets named main_shared
 
 # Build rule for target.
-ContactBookLibst: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 ContactBookLibst
-.PHONY : ContactBookLibst
+main_shared: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 main_shared
+.PHONY : main_shared
 
 # fast build rule for target.
-ContactBookLibst/fast:
-	$(MAKE) -f CMakeFiles/ContactBookLibst.dir/build.make CMakeFiles/ContactBookLibst.dir/build
-.PHONY : ContactBookLibst/fast
+main_shared/fast:
+	$(MAKE) -f CMakeFiles/main_shared.dir/build.make CMakeFiles/main_shared.dir/build
+.PHONY : main_shared/fast
 
-contactBook.o: contactBook.c.o
-.PHONY : contactBook.o
+#=============================================================================
+# Target rules for targets named main_static
+
+# Build rule for target.
+main_static: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 main_static
+.PHONY : main_static
+
+# fast build rule for target.
+main_static/fast:
+	$(MAKE) -f CMakeFiles/main_static.dir/build.make CMakeFiles/main_static.dir/build
+.PHONY : main_static/fast
+
+#=============================================================================
+# Target rules for targets named shared
+
+# Build rule for target.
+shared: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 shared
+.PHONY : shared
+
+# fast build rule for target.
+shared/fast:
+	$(MAKE) -f CMakeFiles/shared.dir/build.make CMakeFiles/shared.dir/build
+.PHONY : shared/fast
+
+#=============================================================================
+# Target rules for targets named static
+
+# Build rule for target.
+static: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 static
+.PHONY : static
+
+# fast build rule for target.
+static/fast:
+	$(MAKE) -f CMakeFiles/static.dir/build.make CMakeFiles/static.dir/build
+.PHONY : static/fast
+
+lib/contactBook.o: lib/contactBook.c.o
+.PHONY : lib/contactBook.o
 
 # target to build an object file
-contactBook.c.o:
-	$(MAKE) -f CMakeFiles/ContactBookLibdl.dir/build.make CMakeFiles/ContactBookLibdl.dir/contactBook.c.o
-	$(MAKE) -f CMakeFiles/ContactBookLibso.dir/build.make CMakeFiles/ContactBookLibso.dir/contactBook.c.o
-	$(MAKE) -f CMakeFiles/ContactBookLibst.dir/build.make CMakeFiles/ContactBookLibst.dir/contactBook.c.o
-.PHONY : contactBook.c.o
+lib/contactBook.c.o:
+	$(MAKE) -f CMakeFiles/dynamic.dir/build.make CMakeFiles/dynamic.dir/lib/contactBook.c.o
+	$(MAKE) -f CMakeFiles/shared.dir/build.make CMakeFiles/shared.dir/lib/contactBook.c.o
+	$(MAKE) -f CMakeFiles/static.dir/build.make CMakeFiles/static.dir/lib/contactBook.c.o
+.PHONY : lib/contactBook.c.o
 
-contactBook.i: contactBook.c.i
-.PHONY : contactBook.i
+lib/contactBook.i: lib/contactBook.c.i
+.PHONY : lib/contactBook.i
 
 # target to preprocess a source file
-contactBook.c.i:
-	$(MAKE) -f CMakeFiles/ContactBookLibdl.dir/build.make CMakeFiles/ContactBookLibdl.dir/contactBook.c.i
-	$(MAKE) -f CMakeFiles/ContactBookLibso.dir/build.make CMakeFiles/ContactBookLibso.dir/contactBook.c.i
-	$(MAKE) -f CMakeFiles/ContactBookLibst.dir/build.make CMakeFiles/ContactBookLibst.dir/contactBook.c.i
-.PHONY : contactBook.c.i
+lib/contactBook.c.i:
+	$(MAKE) -f CMakeFiles/dynamic.dir/build.make CMakeFiles/dynamic.dir/lib/contactBook.c.i
+	$(MAKE) -f CMakeFiles/shared.dir/build.make CMakeFiles/shared.dir/lib/contactBook.c.i
+	$(MAKE) -f CMakeFiles/static.dir/build.make CMakeFiles/static.dir/lib/contactBook.c.i
+.PHONY : lib/contactBook.c.i
 
-contactBook.s: contactBook.c.s
-.PHONY : contactBook.s
+lib/contactBook.s: lib/contactBook.c.s
+.PHONY : lib/contactBook.s
 
 # target to generate assembly for a file
-contactBook.c.s:
-	$(MAKE) -f CMakeFiles/ContactBookLibdl.dir/build.make CMakeFiles/ContactBookLibdl.dir/contactBook.c.s
-	$(MAKE) -f CMakeFiles/ContactBookLibso.dir/build.make CMakeFiles/ContactBookLibso.dir/contactBook.c.s
-	$(MAKE) -f CMakeFiles/ContactBookLibst.dir/build.make CMakeFiles/ContactBookLibst.dir/contactBook.c.s
-.PHONY : contactBook.c.s
+lib/contactBook.c.s:
+	$(MAKE) -f CMakeFiles/dynamic.dir/build.make CMakeFiles/dynamic.dir/lib/contactBook.c.s
+	$(MAKE) -f CMakeFiles/shared.dir/build.make CMakeFiles/shared.dir/lib/contactBook.c.s
+	$(MAKE) -f CMakeFiles/static.dir/build.make CMakeFiles/static.dir/lib/contactBook.c.s
+.PHONY : lib/contactBook.c.s
+
+main.o: main.c.o
+.PHONY : main.o
+
+# target to build an object file
+main.c.o:
+	$(MAKE) -f CMakeFiles/main_shared.dir/build.make CMakeFiles/main_shared.dir/main.c.o
+	$(MAKE) -f CMakeFiles/main_static.dir/build.make CMakeFiles/main_static.dir/main.c.o
+.PHONY : main.c.o
+
+main.i: main.c.i
+.PHONY : main.i
+
+# target to preprocess a source file
+main.c.i:
+	$(MAKE) -f CMakeFiles/main_shared.dir/build.make CMakeFiles/main_shared.dir/main.c.i
+	$(MAKE) -f CMakeFiles/main_static.dir/build.make CMakeFiles/main_static.dir/main.c.i
+.PHONY : main.c.i
+
+main.s: main.c.s
+.PHONY : main.s
+
+# target to generate assembly for a file
+main.c.s:
+	$(MAKE) -f CMakeFiles/main_shared.dir/build.make CMakeFiles/main_shared.dir/main.c.s
+	$(MAKE) -f CMakeFiles/main_static.dir/build.make CMakeFiles/main_static.dir/main.c.s
+.PHONY : main.c.s
+
+maindynamic.o: maindynamic.c.o
+.PHONY : maindynamic.o
+
+# target to build an object file
+maindynamic.c.o:
+	$(MAKE) -f CMakeFiles/main_dynamic.dir/build.make CMakeFiles/main_dynamic.dir/maindynamic.c.o
+.PHONY : maindynamic.c.o
+
+maindynamic.i: maindynamic.c.i
+.PHONY : maindynamic.i
+
+# target to preprocess a source file
+maindynamic.c.i:
+	$(MAKE) -f CMakeFiles/main_dynamic.dir/build.make CMakeFiles/main_dynamic.dir/maindynamic.c.i
+.PHONY : maindynamic.c.i
+
+maindynamic.s: maindynamic.c.s
+.PHONY : maindynamic.s
+
+# target to generate assembly for a file
+maindynamic.c.s:
+	$(MAKE) -f CMakeFiles/main_dynamic.dir/build.make CMakeFiles/main_dynamic.dir/maindynamic.c.s
+.PHONY : maindynamic.c.s
 
 # Help Target
 help:
@@ -177,14 +267,23 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... ContactBookLibdl"
-	@echo "... ContactBookLibso"
-	@echo "... ContactBookLibst"
+	@echo "... dynamic"
 	@echo "... edit_cache"
+	@echo "... main_dynamic"
+	@echo "... main_shared"
+	@echo "... main_static"
 	@echo "... rebuild_cache"
-	@echo "... contactBook.o"
-	@echo "... contactBook.i"
-	@echo "... contactBook.s"
+	@echo "... shared"
+	@echo "... static"
+	@echo "... lib/contactBook.o"
+	@echo "... lib/contactBook.i"
+	@echo "... lib/contactBook.s"
+	@echo "... main.o"
+	@echo "... main.i"
+	@echo "... main.s"
+	@echo "... maindynamic.o"
+	@echo "... maindynamic.i"
+	@echo "... maindynamic.s"
 .PHONY : help
 
 
