@@ -1,1 +1,0 @@
-/usr/bin/cc -fPIC  -Wall -Wpedantic  -shared -Wl,-soname,libshared.so -o libshared.so CMakeFiles/shared.dir/contactBook.c.o 

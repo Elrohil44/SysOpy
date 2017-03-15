@@ -1,1 +1,0 @@
-/usr/bin/cc  -g -O3 -Wall -Wpedantic   CMakeFiles/main_dynamic.dir/maindynamic.c.o  -o main_dynamic -ldl 

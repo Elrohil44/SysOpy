@@ -1,1 +1,0 @@
-/usr/bin/cc  -g -O3 -Wall -Wpedantic   CMakeFiles/main_static.dir/main.c.o  -o main_static libstatic.a 

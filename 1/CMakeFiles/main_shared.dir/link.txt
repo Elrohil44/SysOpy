@@ -1,1 +1,0 @@
-/usr/bin/cc  -g -O3 -Wall -Wpedantic   CMakeFiles/main_shared.dir/main.c.o  -o main_shared -Wl,-rpath,/home/student/Desktop/SysOpy/1 libshared.so 
