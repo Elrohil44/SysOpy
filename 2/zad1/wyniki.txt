@@ -1,0 +1,122 @@
+Funkcje systemowe sa szybsze od tych z biblioteki C.
+
+./main random GENERATE 2000 4 
+user:	0.000000
+sys:	0.004000
+./main random SYS SORT 2000 4 
+user:	0.204000
+sys:	2.428000
+./main copy LIB SORT 2000 4 
+user:	0.624000
+sys:	2.796000
+./main random SYS SHUFFLE 2000 4 
+user:	0.004000
+sys:	0.000000
+./main random LIB SHUFFLE 2000 4 
+user:	0.000000
+sys:	0.004000
+./main random GENERATE 3000 4 
+user:	0.000000
+sys:	0.004000
+./main random SYS SORT 3000 4 
+user:	0.464000
+sys:	5.936000
+./main copy LIB SORT 3000 4 
+user:	1.484000
+sys:	7.228000
+./main random SYS SHUFFLE 3000 4 
+user:	0.000000
+sys:	0.008000
+./main random LIB SHUFFLE 3000 4 
+user:	0.004000
+sys:	0.004000
+./main random GENERATE 2000 512 
+user:	0.000000
+sys:	0.100000
+./main random SYS SORT 2000 512 
+user:	0.184000
+sys:	2.880000
+./main copy LIB SORT 2000 512 
+user:	0.680000
+sys:	3.076000
+./main random SYS SHUFFLE 2000 512 
+user:	0.004000
+sys:	0.000000
+./main random LIB SHUFFLE 2000 512 
+user:	0.004000
+sys:	0.004000
+./main random GENERATE 3000 512 
+user:	0.000000
+sys:	0.148000
+./main random SYS SORT 3000 512 
+user:	0.388000
+sys:	6.456000
+./main copy LIB SORT 3000 512 
+user:	1.620000
+sys:	6.944000
+./main random SYS SHUFFLE 3000 512 
+user:	0.000000
+sys:	0.008000
+./main random LIB SHUFFLE 3000 512 
+user:	0.004000
+sys:	0.008000
+./main random GENERATE 2000 4096 
+user:	0.004000
+sys:	0.768000
+./main random SYS SORT 2000 4096 
+user:	0.232000
+sys:	4.144000
+./main copy LIB SORT 2000 4096 
+user:	0.604000
+sys:	4.440000
+./main random SYS SHUFFLE 2000 4096 
+user:	0.000000
+sys:	0.008000
+./main random LIB SHUFFLE 2000 4096 
+user:	0.004000
+sys:	0.004000
+./main random GENERATE 3000 4096 
+user:	0.000000
+sys:	1.160000
+./main random SYS SORT 3000 4096 
+user:	0.496000
+sys:	9.252000
+./main copy LIB SORT 3000 4096 
+user:	1.232000
+sys:	9.144000
+./main random SYS SHUFFLE 3000 4096 
+user:	0.000000
+sys:	0.012000
+./main random LIB SHUFFLE 3000 4096 
+user:	0.000000
+sys:	0.012000
+./main random GENERATE 2000 8192 
+user:	0.008000
+sys:	1.536000
+./main random SYS SORT 2000 8192 
+user:	0.212000
+sys:	6.696000
+./main copy LIB SORT 2000 8192 
+user:	0.552000
+sys:	6.880000
+./main random SYS SHUFFLE 2000 8192 
+user:	0.000000
+sys:	0.016000
+./main random LIB SHUFFLE 2000 8192 
+user:	0.000000
+sys:	0.016000
+./main random GENERATE 3000 8192 
+user:	0.016000
+sys:	2.396000
+./main random SYS SORT 3000 8192 
+user:	0.476000
+sys:	15.924000
+./main copy LIB SORT 3000 8192 
+user:	1.376000
+sys:	15.604000
+./main random SYS SHUFFLE 3000 8192 
+user:	0.000000
+sys:	0.044000
+./main random LIB SHUFFLE 3000 8192 
+user:	0.000000
+sys:	0.024000

@@ -295,6 +295,11 @@ int main(int argc, char* argv[])
     struct rusage time_a;
     if(action!=NULL)
     {
+      for(int i=0;i<argc && i<6;i++)
+      {
+        printf("%s ",argv[i]);
+      }
+      printf("\n");
       time_l=getTime();
       switch(action->func)
       {

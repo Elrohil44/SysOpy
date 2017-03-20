@@ -1,0 +1,20 @@
+#!/bin/bash
+
+
+counts=(2000 3000)
+sizes=(4 512 4096 8192)
+printf "" > wyniki.txt
+
+for size in ${sizes[@]}; do
+	for count in ${counts[@]}; do
+		printf "" > random
+		./main random GENERATE "$count" "$size" >>wyniki.txt
+		cp random copy
+		./main random SYS SORT "$count" "$size" >>wyniki.txt
+		./main copy LIB SORT "$count" "$size" >> wyniki.txt
+		./main random SYS SHUFFLE "$count" "$size" >> wyniki.txt
+		./main random LIB SHUFFLE "$count" "$size" >> wyniki.txt
+	done
+done
+
+
