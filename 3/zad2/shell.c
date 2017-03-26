@@ -114,20 +114,24 @@ int main(int argc, char const *argv[]) {
                 if(WEXITSTATUS(status))
                 {
                   printexec(args);
-                  printf("Line:%d:Above process was exited with status: %d\n", nr, WEXITSTATUS(status));
+                  time_a = getTime();
+                  printf("Line:%d:Process was exited with status: %d\n", nr, WEXITSTATUS(status));
+                  printtimes(time_l, time_a);
                   exit(EXIT_FAILURE);
                 }
-            } else if (WIFSIGNALED(status)) {
-                printexec(args);
-                printf("Line:%d:Above process was killed by signal %d\n", nr,WTERMSIG(status));
-                exit(EXIT_FAILURE);
-            } else if (WIFSTOPPED(status)) {
-                printexec(args);
-                printf("Line:%d:Above process was stopped by signal %d\n", nr,WSTOPSIG(status));
-            } else if (WIFCONTINUED(status)) {
-                printexec(args);
-                printf("Line:%d:Above process is being continued\n",nr);
-            }
+              } else if (WIFSIGNALED(status)) {
+                  printexec(args);
+                  time_a = getTime();
+                  printf("Line:%d:Process was killed by signal %d\n", nr,WTERMSIG(status));
+                  printtimes(time_l, time_a);
+                  exit(EXIT_FAILURE);
+              } else if (WIFSTOPPED(status)) {
+                  printexec(args);
+                  printf("Line:%d:Above process was stopped by signal %d\n", nr,WSTOPSIG(status));
+              } else if (WIFCONTINUED(status)) {
+                  printexec(args);
+                  printf("Line:%d:Above process is being continued\n",nr);
+              }
           } while(!WIFEXITED(status) && !WIFSIGNALED(status));
           time_a = getTime();
           printexec(args);
