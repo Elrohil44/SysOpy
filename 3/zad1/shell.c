@@ -19,8 +19,8 @@ void printusage(const char * name)
 int parse(char* line, char** args)
 {
   int i=0;
-  if((args[0]=strtok(line, " \n"))!=NULL)
-    while (i<MAX_ARGS-2 && (args[++i]=strtok(NULL, " \n"))!=NULL);
+  if((args[0]=strtok(line, " \n\r\t"))!=NULL)
+    while (i<MAX_ARGS-2 && (args[++i]=strtok(NULL, " \n\r\t"))!=NULL);
   args[i]=NULL;
   if(i==0) return 3;
   else if(i==1 && args[0][0]=='#') return 1;
@@ -56,10 +56,10 @@ int main(int argc, char const *argv[]) {
         case 3:
           break;
         case 1:
-          unsetenv(&args[0][1]);
+          if(unsetenv(&args[0][1])) fprintf(stderr, "Error while unsetting environmental variable \"%s\"\n", &args[0][1]);
           break;
         case 2:
-          setenv(&args[0][1],args[1],1);
+          if(setenv(&args[0][1],args[1],1))  fprintf(stderr, "Error while setting environmental variable \"%s\"\n", &args[0][1]);
           break;
         case 0:
           if((pid=fork())<0)

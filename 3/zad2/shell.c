@@ -24,8 +24,8 @@ void printusage(const char * name)
 int parse(char* line, char** args)
 {
   int i=0;
-  if((args[0]=strtok(line, " \n"))!=NULL)
-    while (i<MAX_ARGS-2 && (args[++i]=strtok(NULL, " \n"))!=NULL);
+  if((args[0]=strtok(line, " \n\r\t"))!=NULL)
+    while (i<MAX_ARGS-2 && (args[++i]=strtok(NULL, " \n\r\t"))!=NULL);
   args[i]=NULL;
   if(i==0) return 3;
   else if(i==1 && args[0][0]=='#') return 1;
