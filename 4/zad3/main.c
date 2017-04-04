@@ -24,21 +24,24 @@ int isNumber(const char* arg)
 
 
 pid_t child;
-int volatile i = 0;
+sig_atomic_t i = 0;
 union sigval bbb;
-loop = 1;
+int loop = 1;
+sigset_t set;
 
 void g(int sig)
 {
   switch (sig) {
     case SIGUSR1:
-        if(child == 0) sigqueue(getppid(), SIGUSR1, bbb);
+        if(child == 0)
+        {
+          sigqueue(getppid(), SIGUSR1, bbb);
+        }
         i++;
         break;
 
     case SIGUSR2:
         printf("Child: %d SIGUSR1 received\n", i);
-        sleep(2);
         loop = 0;
         break;
 
@@ -53,12 +56,11 @@ void g(int sig)
 
     if(sig == SIGRTMIN){
       if(child == 0) sigqueue(getppid(), SIGRTMIN, bbb);
-      i++;
+      ++i;
     }
 
     if(sig == SIGRTMIN + 1){
-    printf("Child: %d SIGRTMIN+1 received\n", i);
-    sleep(2);
+    printf("Child: %d SIGRTMIN received\n", i);
     loop = 0;
     }
 
@@ -73,22 +75,14 @@ int main(int argc, char const *argv[]) {
   struct sigaction action;
   action.sa_handler = g;
   sigemptyset(&action.sa_mask);
+  sigaddset(&action.sa_mask, SIGUSR2);
+  sigaddset(&action.sa_mask, SIGRTMIN+1);
   sigaction(SIGUSR1, &action, NULL);
   sigaction(SIGINT, &action, NULL);
   sigaction(SIGUSR2, &action, NULL);
   for (int i= SIGRTMIN;i<=SIGRTMIN+1;i++) sigaction(i, &action, NULL);
-  int a;
   if ((child = fork()) == 0)
   {
-      sigset_t set;
-      siginfo_t info;
-      struct timespec timeout;
-      sigemptyset(&set);
-      sigaddset(&set, SIGINT);
-      sigaddset(&set, SIGUSR2);
-      timeout.tv_sec = 1;
-      timeout.tv_nsec = 0;
-    //  while((a = )!=) pause();
       while(loop) pause();
       exit(EXIT_SUCCESS);
   }
@@ -100,7 +94,7 @@ int main(int argc, char const *argv[]) {
       for(int l=0;l<L;l++)
       {
         kill(child, SIGUSR1);
-        sleep(3);
+        sleep(1);
       }
       kill(child, SIGUSR2);
       break;
