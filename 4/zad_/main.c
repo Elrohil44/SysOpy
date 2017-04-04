@@ -100,8 +100,11 @@ int main(int argc, char const *argv[]) {
   N = atoi(argv[1]);
   root = getpid();
 
+  const char* options[]={"KILL","SIGQUEUE","REALTIME"};
+
   struct sigaction action;
   action.sa_handler = g;
+  action.sa_flags = SA_RESTART;
   sigemptyset(&action.sa_mask);
   sigaddset(&action.sa_mask, SIGUSR2);
   sigaddset(&action.sa_mask, SIGRTMIN+1);
@@ -129,7 +132,7 @@ int main(int argc, char const *argv[]) {
     childind = rand()%N;
     if(pids[childind] != -1){
     option = (option + 1)%3;
-    printf("Parent: Sending %d signals with option %d\n", L, option + 1);
+    printf("Parent: Sending %d signals with %s\n", L, options[option]);
     sleep(1);
     send(option + 1, childind);
     waitpid(pids[childind], &status, 0);
@@ -149,27 +152,31 @@ void send(int type, int childno)
 {
   switch (type) {
     case 1:
+    //sleep(1);
     for(int l=0;l<L;l++)
     {
       kill(pids[childno], SIGUSR1);
-      sleep(1);
+      //sleep(1);
     }
+    //sleep(1);
     kill(pids[childno], SIGUSR2);
     break;
     case 2:
     for(int l=0;l<L;l++)
     {
       sigqueue(pids[childno], SIGUSR1, bbb);
-      sleep(1);
+      //sleep(1);
     }
     sigqueue(pids[childno], SIGUSR2, bbb);
     break;
     case 3:
+    //sleep(1);
     for(int l=0;l<L;l++)
     {
       kill(pids[childno], SIGRTMIN);
-      sleep(1);
+      //sleep(1);
     }
+    //sleep(1);
     kill(pids[childno], SIGRTMIN+1);
     break;
     default:

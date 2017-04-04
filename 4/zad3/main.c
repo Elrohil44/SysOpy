@@ -89,12 +89,12 @@ int main(int argc, char const *argv[]) {
   else
   {
     printf("Parent: Sending %d signals\n", L);
+    sleep(1);
     switch (T) {
       case 1:
       for(int l=0;l<L;l++)
       {
         kill(child, SIGUSR1);
-        sleep(1);
       }
       kill(child, SIGUSR2);
       break;
@@ -102,7 +102,6 @@ int main(int argc, char const *argv[]) {
       for(int l=0;l<L;l++)
       {
         sigqueue(child, SIGUSR1, bbb);
-        sleep(1);
       }
       sigqueue(child, SIGUSR2, bbb);
       break;
@@ -110,7 +109,6 @@ int main(int argc, char const *argv[]) {
       for(int l=0;l<L;l++)
       {
         kill(child, SIGRTMIN);
-        sleep(1);
       }
       kill(child, SIGRTMIN+1);
     }

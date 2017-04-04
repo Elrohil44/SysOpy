@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <unistd.h>
 
 int i = 1;
 char base = 'A';
@@ -27,6 +28,7 @@ int main(int argc, char const *argv[]) {
   while(1)
   {
     printf("%c\n", base + i * (l++)%diff);
+	sleep(1);
   }
   return 0;
 }
