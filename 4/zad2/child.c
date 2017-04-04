@@ -39,8 +39,8 @@ int main(int argc, char const *argv[]) {
   sigemptyset(&set);
   sigaddset(&set, SIGINT);
   sigaddset(&set, SIGUSR2);
-  timeout.tv_sec = 1;
-  timeout.tv_nsec = 0;
+  timeout.tv_sec = 0;
+  timeout.tv_nsec = 10e7;
   struct timespec start, finish;
   double elapsed;
 
@@ -51,7 +51,7 @@ int main(int argc, char const *argv[]) {
 
 
   clock_gettime(CLOCK_MONOTONIC, &start);
-  printf("Sending signal SIGUSR1 from %d to %d\n", getpid(), parent);
+  //printf("Sending signal SIGUSR1 from %d to %d\n", getpid(), parent);
   fflush(stdout);
   if(sigqueue(parent, SIGUSR1, bbb))
   {
@@ -65,7 +65,7 @@ int main(int argc, char const *argv[]) {
     {
 	printf("Child %d: Received signal SIGUSR2 from %d\n",getpid(), info.si_pid);
   fflush(stdout);
-      printf("Sending signal SIGRT from %d to %d\n",getpid(), parent);
+      //printf("Sending signal SIGRT from %d to %d\n",getpid(), parent);
       fflush(stdout);
       if(sigqueue(parent, SIGRTMIN + rand()%32, bbb))
         printf("Error while sending signal SIGRT from %d to %d\n",getpid(), parent);
@@ -77,7 +77,7 @@ int main(int argc, char const *argv[]) {
     }
     else if(a == -1 && errno == EAGAIN)
     {
-       printf("Sending signal SIGUSR1 from %d to %d\n", getpid(), parent);
+       //printf("Sending signal SIGUSR1 from %d to %d\n", getpid(), parent);
        fflush(stdout);
       if(sigqueue(parent, SIGUSR1, bbb))
       {

@@ -26,9 +26,9 @@ sig_atomic_t requests = 0;
 static sig_atomic_t* pids;
 sig_atomic_t i = -1;
 static int M;
-static int volatile N, _N;
+static sig_atomic_t N, _N;
 static int loop = 1, loop1 = 1;
-
+sigset_t set;
 
 void swap(pid_t* a, pid_t* b)
 {
@@ -52,10 +52,22 @@ void g(int sig, siginfo_t* a, void* b)
           i++;
         }
     }
+    else if(requests == M)
+    {
+      for(int l=i+1;l < N;l++)
+        if (pids[l] == a->si_pid)
+        {
+          swap(&pids[l], &pids[i + 1]);
+          i++;
+        }
+      sigemptyset(&set);
+      sigaddset(&set, SIGUSR1);
+      sigprocmask(SIG_BLOCK, &set, NULL);
+      loop1=0;
+    }
     else
     {
-      loop1 = 0;
-      printf("Sending signal SIGUSR2 from %d to %d\n",getpid(), a->si_pid );
+      //printf("Sending signal SIGUSR2 from %d to %d\n",getpid(), a->si_pid );
       fflush(stdout);
       if(kill(a->si_pid, SIGUSR2) == -1)
         printf("Error while sending signal SIGUSR2 from %d to %d\n",getpid(), a->si_pid );
@@ -66,10 +78,10 @@ void g(int sig, siginfo_t* a, void* b)
     for(int i=0; i<_N; i++)
     {
 
-      if(kill(pids[i], 0) == 0 && pids[i]!=-1)
+      if(pids[i]!=-1 && kill(pids[i], 0) == 0  )
 	{
 
-        printf("Sending signal SIGINT from %d to %d\n",getpid(), pids[i]);
+        //printf("Sending signal SIGINT from %d to %d\n",getpid(), pids[i]);
         fflush(stdout);
         if(kill(pids[i], SIGINT) == -1)
         printf("Error while sending signal SIGINT from %d to %d\n",getpid(), pids[i]);
@@ -83,7 +95,7 @@ void g(int sig, siginfo_t* a, void* b)
       printf("Received exit code %d from %d\n", sig, a->si_pid);
       fflush(stdout);
       for(int i=0; i<_N; i++) if(pids[i]==a->si_pid) pids[i] = -1;
-      N--;
+      if(--N) loop1 = 0;
     }
   }
 
@@ -115,11 +127,14 @@ int main(int argc, char const *argv[]) {
   }
   while(loop)
   {
+
       while (loop1) pause();
       for(int l=i; l>-1; l--)
       {
         kill(pids[l], SIGUSR2);
       }
+
+      sigprocmask(SIG_UNBLOCK, &set, NULL);
       loop = 0;
   }
   while (N>0) pause();
