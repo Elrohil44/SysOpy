@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <time.h>
 
 #define BUF_SIZE 50
 int isNumber(const char* arg)
@@ -20,9 +21,9 @@ int main(int argc, char const *argv[]) {
   int R = atoi(argv[2]);
   int** T = malloc(R * sizeof(int*));
   char K[]="100";
-  char N[]="100000";
+  char N[]="1000000";
   char buf[BUF_SIZE] = "";
-  int slavesc = 100;
+  int slavesc = 10;
   double x, y;
   int iters;
   for (int i=0; i<R; i++)
@@ -41,7 +42,7 @@ int main(int argc, char const *argv[]) {
       exit(EXIT_SUCCESS);
     }
   }
-
+  int at = time(NULL);
   int pipe = open(argv[1], O_RDONLY);
   while(read(pipe, buf, BUF_SIZE))
   {
@@ -57,6 +58,7 @@ int main(int argc, char const *argv[]) {
   fclose(file);
   for (int i=0; i<R; i++) free(T[i]);
   free(T);
+  printf("%d \n", (int)time(NULL) - at);
   FILE* stream = popen("gnuplot", "w");
   fprintf(stream, "set view map\n");
   fprintf(stream, "set xrange [0:%d]\n", R);
