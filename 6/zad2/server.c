@@ -16,27 +16,10 @@ void uppercase(char* s)
   }
 }
 
-void rand_str(char *dest, size_t length) {
-    int seed;
-    int fd = open("/dev/urandom", O_RDONLY);
-    read(fd, &seed, sizeof(int));
-    close(fd);
-    srand(seed);
-    char charset[] = "0123456789"
-                     "abcdefghijklmnopqrstuvwxyz"
-                     "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-    while (length-- > 0) {
-        size_t index = (double) rand() / RAND_MAX * (sizeof charset - 1);
-        *dest++ = charset[index];
-    }
-    *dest = '\0';
-}
-
 int main(int argc, char const *argv[]) {
   mqd_t clients[MAX_CLIENTS_COUNT];
   struct message msg;
-  struct tm time_a;
+  struct tm* time_a;
   time_t time_sec;
   int count = 0;
   for(int i=0; i<MAX_CLIENTS_COUNT; i++) clients[i] = -1;
@@ -46,8 +29,6 @@ int main(int argc, char const *argv[]) {
   attr.mq_flags = 0;
   char name[10];
   mqd_t queue = mq_open(SERVER_NAME, O_RDONLY | O_CREAT, 666, &attr);
-  fprintf(stderr, "%s\n", strerror(errno));
-  printf("%s %d\n",SERVER_NAME, queue );
   while(mq_receive(queue, (char*)&msg, MSGLEN, NULL) != -1)
   {
     switch (msg.mtype) {
@@ -67,10 +48,8 @@ int main(int argc, char const *argv[]) {
         break;
       case TIME:
         time(&time_sec);
-        time_a = *(localtime(&time_sec));
-        sprintf(msg.msg, "%d:%d:%d\t%d.%d.%d", time_a.tm_hour, time_a.tm_min,
-                                               time_a.tm_sec, time_a.tm_mday,
-                                               time_a.tm_mon + 1, time_a.tm_year + 1900);
+        time_a = localtime(&time_sec);
+        sprintf(msg.msg, "%s", asctime(time_a));
         mq_send(clients[msg.key], (char*)&msg, MSGLEN, 0);
         break;
       case EXIT:
