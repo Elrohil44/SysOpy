@@ -5,6 +5,10 @@
 #include "common.h"
 #include <string.h>
 
+
+mqd_t id;
+char name[10] = "/";
+
 void menu()
 {
   printf("\tECHO\t\t-\t1\n");
@@ -31,14 +35,26 @@ void rand_str(char *dest, size_t length) {
     *dest = '\0';
 }
 
+void g(int signo)
+{
+  mq_close(id);
+  mq_unlink(name);
+  exit(EXIT_FAILURE);
+}
+
 
 int main(int argc, char const *argv[]) {
-  mqd_t id, queue;
+  sigset_t mask;
+  sigemptyset(&mask);
+  sigaddset(&mask, SIGINT);
+  struct sigaction newaction;
+  newaction.sa_handler = g;
+  sigaction(SIGINT, &newaction, NULL);
+  mqd_t queue;
   int task;
   int f = 1;
   struct message msg;
   struct message response;
-  char name[10] = "/";
   rand_str(&name[1], 9);
   struct mq_attr attr;
   attr.mq_maxmsg = 10;

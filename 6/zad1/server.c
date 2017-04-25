@@ -4,7 +4,12 @@
 #include <time.h>
 #include <stdio.h>
 #include <ctype.h>
+#include "signal.h"
 #include "common.h"
+
+
+int clients[MAX_CLIENTS_COUNT];
+int queue;
 
 void uppercase(char* s)
 {
@@ -16,15 +21,31 @@ void uppercase(char* s)
   }
 }
 
+void g(int signo)
+{
+  msgctl(queue, IPC_RMID, NULL);
+  int i = 0;
+  while(clients[i]!=-1)
+  {
+    msgctl(clients[i++], IPC_RMID, NULL);
+  }
+  exit(EXIT_FAILURE);
+}
+
 int main(int argc, char const *argv[]) {
-  int clients[MAX_CLIENTS_COUNT];
+  sigset_t mask;
+  sigemptyset(&mask);
+  sigaddset(&mask, SIGINT);
+  struct sigaction newaction;
+  newaction.sa_handler = g;
+  sigaction(SIGINT, &newaction, NULL);
   struct message msg;
   struct tm* time_a;
   time_t time_sec;
   int f = MSG_NOERROR;
   int count = 0;
   for(int i=0; i<MAX_CLIENTS_COUNT; i++) clients[i] = -1;
-  int queue = msgget(ftok(getenv("HOME"), SERVER_KEY), IPC_CREAT | 0666);
+  queue = msgget(ftok(getenv("HOME"), SERVER_KEY), IPC_CREAT | 0666);
   while(msgrcv(queue, &msg, MSGLEN, 0, f) != -1)
   {
     switch (msg.mtype) {

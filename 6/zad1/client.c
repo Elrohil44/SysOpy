@@ -2,7 +2,10 @@
 #include <stdio.h>
 #include <sys/msg.h>
 #include <sys/ipc.h>
+#include <signal.h>
 #include "common.h"
+
+int id;
 
 void menu()
 {
@@ -13,8 +16,20 @@ void menu()
   printf("\n\n\tChoose task:\t");
 }
 
+void g(int signo)
+{
+  msgctl(id, IPC_RMID, NULL);
+  exit(EXIT_FAILURE);
+}
+
 int main(int argc, char const *argv[]) {
-  int id, queue;
+  sigset_t mask;
+  sigemptyset(&mask);
+  sigaddset(&mask, SIGINT);
+  struct sigaction newaction;
+  newaction.sa_handler = g;
+  sigaction(SIGINT, &newaction, NULL);
+  int queue;
   int task;
   int f = 1;
   struct message msg;
