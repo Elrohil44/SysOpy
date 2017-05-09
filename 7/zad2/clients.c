@@ -125,9 +125,9 @@ int main(int argc, char const *argv[]) {
         }
         else
         {
-          sem_post(sem_room);
           clock_gettime(CLOCK_MONOTONIC, &_time);
           printf("%f\tLimit reached, leaving... %d\n", _time.tv_sec + (double) _time.tv_nsec / 1e9, pid);
+          sem_post(sem_room);
           continue;
         }
         sprintf(name, "%s%d", SEMS, id);
@@ -142,8 +142,11 @@ int main(int argc, char const *argv[]) {
         room->seat = pid;
         waiting[id] = -1;
         id = -1;
+      	room->taken--;
+      	room->first = (room->first + 1)%room->count;
+        clock_gettime(CLOCK_MONOTONIC, &_time);
+        printf("%f\tLeft the waiting room %d\n", _time.tv_sec + (double) _time.tv_nsec / 1e9, pid);
         sem_post(sem_room);
-
         sem_post(sem_p);
         sem_wait(chair);
         room->seat = -1;
