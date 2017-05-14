@@ -104,7 +104,6 @@ int main(int argc, char const *argv[]) {
 
     clock_gettime(CLOCK_MONOTONIC, &_time);
     printf("%f\tBarber is starting handling %d\n", _time.tv_sec + (double) _time.tv_nsec / 1e9, room->seat);
-  //  sleep(1);
     clock_gettime(CLOCK_MONOTONIC, &_time);
     printf("%f\tBarber is ending handling %d\n", _time.tv_sec + (double) _time.tv_nsec / 1e9, room->seat);
     semop(sem_p, op, 1);
@@ -113,39 +112,14 @@ int main(int argc, char const *argv[]) {
     semop(sem_room, &wait[1], 1);
     semop(sem_p, op, 1);
     semop(sem_p, &op[1], 1);
-
-    // f = 1;
-    //semop(sem_room, &wait[1], 1);
-    while(room->taken > 0) //golenie tych z poczekalni
-    {
-      // if(!f) semop(sem_room, &wait[1], 1);
-      // else f = 0;
-      // while(waiting[room->first] == -1)
-      // {
-      //   if(room->taken == 0)
-      //   {
-      //     f = 1;
-      //     break;
-      //   }
-      //   room->first = (room->first+1)%N;
-      //   room->taken--;
-      // }
-      // if(f)
-      // {
-      //   break;
-      // }
+    while(room->taken > 0)
       invite.sem_num = room->first;
       semop(sem_room, &wait[0], 1);
       semop(sems, &invite, 1);
-      semop(sem_room, &wait[1], 1);
-      room->taken--;
-      room->first = (room->first + 1)%N;
-      semop(sem_room, &wait[0], 1);
       semop(sem_p, op, 1);
       semop(sem_p, &op[1], 1);
       clock_gettime(CLOCK_MONOTONIC, &_time);
       printf("%f\tBarber is starting handling %d\n", _time.tv_sec + (double) _time.tv_nsec / 1e9, room->seat);
-    //  sleep(1);
       clock_gettime(CLOCK_MONOTONIC, &_time);
       printf("%f\tBarber is ending handling %d\n", _time.tv_sec + (double) _time.tv_nsec / 1e9, room->seat);
       semop(sem_p, op, 1);

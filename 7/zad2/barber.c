@@ -117,10 +117,6 @@ int main(int argc, char const *argv[]) {
       sem_post(sems[room->first]);
 
       sem_wait(sem_p);
-      sem_wait(sem_room);
-      room->taken--;
-      room->first = (room->first + 1)%N;
-      sem_post(sem_room);
       clock_gettime(CLOCK_MONOTONIC, &_time);
       printf("%f\tBarber is starting handling %d\n", _time.tv_sec + (double) _time.tv_nsec / 1e9, room->seat);
       clock_gettime(CLOCK_MONOTONIC, &_time);

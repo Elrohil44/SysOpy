@@ -147,6 +147,10 @@ int main(int argc, char const *argv[]) {
         waiting[id] = -1;
         id = -1;
         wait.sem_op = 1;
+	room->taken--;
+	room->first = (room->first + 1)%room->count;
+        clock_gettime(CLOCK_MONOTONIC, &_time);
+        printf("%f\tLeft the waiting room %d\n", _time.tv_sec + (double) _time.tv_nsec / 1e9, pid);
         semop(sem_room, &wait, 1);
         semop(sem_p, &op, 1);
         semop(sem_p, &op, 1);
