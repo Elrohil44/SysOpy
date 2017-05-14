@@ -40,6 +40,7 @@ int isNumber(const char* arg)
 
 void* f(void* pp)
 {
+  pthread_setcancelstate(PTHREAD_CANCEL_DISABLE,NULL);
   int fd = dup(fdd);
   const char* pattern = (char*) pp;
   struct record records[MAX_T];
@@ -63,7 +64,11 @@ void* f(void* pp)
       }
     }
   }
-  if(!count) pthread_mutex_destroy(&mutex);
+  count = 0;
+  pthread_mutex_lock(&mutex);
+  if ((++p) == N) count = 1;
+  pthread_mutex_unlock(&mutex);
+  if(count) pthread_mutex_destroy(&mutex);
   return NULL;
 }
 
@@ -87,6 +92,6 @@ int main(int argc, char const *argv[]) {
   }
 
   free(IDs);
-
-  return 0;
+  pthread_exit(NULL);
+  return 1;
 }
