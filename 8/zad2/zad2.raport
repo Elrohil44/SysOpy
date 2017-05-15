@@ -1,0 +1,38 @@
+1.  wysłanie sygnału do procesu, gdy żaden wątek nie ma zamaskowanego tego sygnału
+2.  wysłanie sygnału do procesu, gdy główny wątek programu ma zamaskowany ten sygnał, a wszystkie pozostałe wątki nie,
+3.  wysłanie sygnału do procesu, gdy wszystkie wątki mają zainstalowaną niestandardową procedurę obsługi przerwania, która wypisuje informację o nadejściu tego sygnału oraz PID i TID danego wątku
+4.  wysłanie sygnału do wątku z zamaskowanym tym sygnałem
+5.  wysłanie sygnału do wątku, w którym zmieniona jest procedura obsługi sygnału, jak przedstawiono w punkcie 3
+
+
+
+SIGUSR1 - 10
+1. Otrzymanie sygnalu i zakonczenie procesu.
+2. Zignorowanie sygnalu.
+3. Otrzymanie sygnalu tylko przez Main i obsluga tamze.
+4. Zignorowanie sygnalu.
+5. Otrzymanie i obsluga sygnalu przez thread.
+
+SIGTERM - 15
+1. Otrzymanie sygnalu i zakonczenie procesu.
+2. Zignorowanie sygnalu.
+3. Otrzymanie sygnalu tylko przez Main i obsluga tamze.
+4. Zignorowanie sygnalu.
+5. Otrzymanie i obsluga sygnalu przez thread.
+
+SIGKILL - 9
+1. Otrzymanie sygnalu i zakonczenie procesu.
+2. Otrzymanie sygnalu i zakonczenie procesu.
+3. Otrzymanie sygnalu i zakonczenie procesu.
+4. Otrzymanie sygnalu i zakonczenie procesu.
+5. Otrzymanie sygnalu i zakonczenie procesu.
+
+SIGSTOP - 19
+1. Otrzymanie sygnalu i zatrzymanie procesu z watkami.
+2. Otrzymanie sygnalu i zakonczenie procesu z watkami.
+3. Otrzymanie sygnalu i zakonczenie procesu z watkami.
+4. Otrzymanie sygnalu i zakonczenie procesu z watkami.
+5. Otrzymanie sygnalu i zakonczenie procesu z watkami.
+
+Dzielenie przez 0:
+Floating point exception, caly proces konczy sie.
