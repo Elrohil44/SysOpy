@@ -13,12 +13,14 @@ pthread_t* IDs;
 int T, N;
 int fd;
 int p =0;
+int cancelled = 0;
 static pthread_mutex_t mutex;
+pthread_key_t* keys;
 
 struct record
 {
   int id;
-  char text[1024 - sizeof(int)];
+  char text[1025 - sizeof(int)];
 };
 
 void printusage(const char * name)
@@ -38,33 +40,72 @@ int isNumber(const char* arg)
   return 1;
 }
 
+void freeing(void* h)
+{
+  free(h);
+}
+
+
 void* f(void* pp)
 {
   pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+  //fprintf(stderr, "Waiting for lock to allocate\n");
+  pthread_mutex_lock(&mutex);
+  //fprintf(stderr, "Locked\n");
+  for(int i=0;i<T;i++) pthread_setspecific(keys[i], malloc(sizeof(struct record)));
+  //fprintf(stderr, "Allocating\n");
+  pthread_mutex_unlock(&mutex);
   const char* pattern = (char*) pp;
-  struct record records[MAX_T];
+  // struct record records[MAX_T];
+  struct record* record;
   int count = 1;
   int f = 0;
   while(count && !f)
   {
     count = 0;
+    //fprintf(stderr, "Waiting for lock\n");
     pthread_mutex_lock(&mutex);
+    //fprintf(stderr, "Locked\n");
+    //fprintf(stderr, "Reading\n");
     for(int i=0;i<T;i++, count++)
     {
-
-      if(read(fd, &records[i], sizeof(struct record)) == 0) break;
+      record = pthread_getspecific(keys[i]);
+      if(read(fd, &record->id, sizeof(int)) == 0 || read(fd, record->text, sizeof(record->text) - 1) == 0)
+      {
+        break;
+      }
+      record->text[1020] = '\0';
+      // free(pthread_getspecific(keys[i]));
+      pthread_setspecific(keys[i], record);
     }
     pthread_mutex_unlock(&mutex);
+    //fprintf(stderr, "Checking\n");
     for(int i=0;i<count && !f;i++)
     {
-      if(strstr(records[i].text, pattern) != NULL)
+      record = pthread_getspecific(keys[i]);
+      if(strstr(record->text, pattern) != NULL)
       {
-        printf("%ld found an occurence in %d\n", pthread_self(), records[i].id);
+        pthread_mutex_lock(&mutex);
+        //fprintf(stderr, "Locked\n");
+        printf("%ld found an occurence in %d\n", pthread_self(), record->id);
         f = 1;
       }
+      // free(record);
+      // pthread_setspecific(keys[i], NULL);
     }
   }
-  if(f) for (int i=0; i<N; i++) if(IDs[i]!=pthread_self()) pthread_cancel(IDs[i]);
+  if(f)
+  {
+    for (int i=0; i<N; i++)
+    {
+        if(!pthread_equal(IDs[i], pthread_self()))
+        {
+          pthread_cancel(IDs[i]);
+        }
+    }
+    pthread_mutex_unlock(&mutex);
+  }
+  pthread_exit(NULL);
   return NULL;
 }
 
@@ -77,17 +118,23 @@ int main(int argc, char const *argv[]) {
   fd = open(argv[2], O_RDONLY);
 
   IDs = malloc(N * sizeof(pthread_t));
+  keys = malloc(T * sizeof(pthread_key_t));
+  for(int i=0; i<T; i++) pthread_key_create(&keys[i], freeing);
+  pthread_mutex_lock(&mutex);
+  //fprintf(stderr, "Locked\n");
   for(int i=0; i<N; i++)
   {
     pthread_create(&IDs[i], NULL, f,(void*) argv[4]);
   }
-
+  pthread_mutex_unlock(&mutex);
+  //fprintf(stderr, "Unlocked\n");
   for(int i=0; i<N; i++)
   {
     pthread_join(IDs[i], NULL);
   }
-
+  for(int i=0; i<T; i++) pthread_key_delete(keys[i]);
   pthread_mutex_destroy(&mutex);
+  free(keys);
   free(IDs);
 
   return 0;
