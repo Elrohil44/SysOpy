@@ -16,7 +16,8 @@ pthread_t* WritersIDs;
 pthread_t ReadersIDs[MAX_READERS];
 int arguments[MAX_READERS];
 pthread_mutex_t printmutex;
-
+int writers;
+int readers;
 
 
 void sighandler(int n)
@@ -26,6 +27,13 @@ void sighandler(int n)
 
 void onexit(void)
 {
+
+  pthread_mutex_lock(&state.mutex);
+  pthread_mutex_lock(&printmutex);
+  for(int i=0; i<writers; i++) pthread_cancel(WritersIDs[i]);
+  for(int i=0; i<readers; i++) pthread_cancel(ReadersIDs[i]);
+  pthread_mutex_unlock(&printmutex);
+  pthread_mutex_unlock(&state.mutex);
   free(WritersIDs);
   free(state.queue);
   pthread_cond_destroy(&state.firstchange);
@@ -75,6 +83,7 @@ void monitorreading(pthread_cond_t* var)
 
 void* writer()
 {
+  pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
   int count;
   int ind, value;
   while(1)
@@ -115,6 +124,7 @@ void* writer()
 
 void* reader(void* mod)
 {
+  pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
   int* n = mod;
   int count;
   while (1) {
@@ -167,8 +177,7 @@ int main(int argc, char** argv) {
   if(argc<5) printusage(argv[0]);
   int c;
   int nflag = 0, mflag = 0;
-  int writers;
-  int readers = 0;
+  readers = 0;
   char* arg;
   char* forreaders;
   srand(time(NULL));
