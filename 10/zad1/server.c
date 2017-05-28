@@ -64,6 +64,7 @@ void* pinger()
 
       if(send(clients[i].descriptor, &msg, sizeof(msg), MSG_NOSIGNAL) == -1)
       {
+	epoll_ctl(epoll_fd, EPOLL_CTL_DEL, clients[i].descriptor, NULL);
         clients[i] = clients[--clients_count];
       }
       pthread_cond_broadcast(&count_changed);
@@ -164,6 +165,23 @@ void* interface()
   return NULL;
 }
 
+void unregister(const char* name)
+{
+  pthread_mutex_lock(&count_mutex);
+  for(int i=0; i<clients_count; i++)
+  {
+    if(!strcmp(clients[i].name, name))
+    {
+      epoll_ctl(epoll_fd, EPOLL_CTL_DEL, clients[i].descriptor, NULL);
+      clients[i] = clients[--clients_count];
+      printf("\n\n\t%s succesfully unregistered \n\n", name);
+      break;
+    }
+  }
+  pthread_cond_broadcast(&count_changed);
+  pthread_mutex_unlock(&count_mutex);
+}
+
 void* msg_receiver()
 {
   struct epoll_event event;
@@ -174,9 +192,13 @@ void* msg_receiver()
     {
       if(recv(event.data.fd, &response, sizeof(response), MSG_WAITALL) > 0)
       {
-        response.counter = ntohl(response.counter);
-        response.result = ntohl(response.result);
-        printf("\n\n%d. result returned by %s: %d\n\n", response.counter, response.name, response.result);
+        if(ntohl(response.counter) == -1) unregister(response.name);
+        else
+	{
+          response.counter = ntohl(response.counter);
+          response.result = ntohl(response.result);
+          printf("\n\n%d. result returned by %s: %d\n\n", response.counter, response.name, response.result);
+	}
         main_menu();
       }
     }

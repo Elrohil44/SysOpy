@@ -27,6 +27,10 @@ void sighandler(int n)
 
 void onexit(void)
 {
+  struct response response;
+  strcpy(response.name, name);
+  response.counter = htonl(-1);
+  write(socket_fd, &response, sizeof(response));
   shutdown(socket_fd, SHUT_RD);
   close(socket_fd);
 }
@@ -70,8 +74,7 @@ void parseargs(int argc, char** argv)
           break;
         case '4':
           ip_flag = 1;
-          name = optarg;
-          printf("%s\n", name);
+          path = optarg;
           break;
         case '?':
           if (optopt == 'n' || optopt == 'm')
@@ -88,7 +91,6 @@ void parseargs(int argc, char** argv)
         default:
           abort ();
       }
-  printf("pflag = %d, ip_flag = %d, x_flag = %d, nflag = %d\n", pflag, ip_flag, xflag, nflag);
   if((pflag ^ ip_flag) || (ip_flag && xflag) || !nflag) printusage(argv[0]);
 
   for (int index = optind; index < argc; index++)
@@ -123,7 +125,7 @@ int main(int argc, char **argv) {
   {
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
-    if(!inet_aton(name, &addr.sin_addr))
+    if(!inet_aton(path, &addr.sin_addr))
     {
       perror("Error, wrong IP");
       exit(EXIT_FAILURE);
@@ -161,7 +163,6 @@ int main(int argc, char **argv) {
     }
     if(received == -1) continue;
     response.counter = msg.counter;
-    printf("Type: %d, Arg1: %d, Arg2: %d\n", ntohl(msg.type), ntohl(msg.arg1), ntohl(msg.arg2));
     switch (ntohl(msg.type)) {
       case ADD:
         response.result = htonl(ntohl(msg.arg1) + ntohl(msg.arg2));
@@ -176,7 +177,6 @@ int main(int argc, char **argv) {
         response.result = htonl(ntohl(msg.arg1) / ntohl(msg.arg2));
         break;
       default:
-        printf("Received some message\n");
         continue;
         break;
     }
