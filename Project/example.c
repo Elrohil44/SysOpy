@@ -15,12 +15,14 @@ void* f(void* a)
 
 int main(int argc, char const *argv[]) {
   printf("xD\n");
+  printf("%d\n", argc);
   char* c = malloc(3 * 1024 * 1024);
   if (c == NULL) printf("Out of memory, malloc failed\n");
   char a[2];
   fflush(stdout);
   fprintf(stdout, "%s\n", "fprintf");
   pthread_t t;
+  scanf(" %d\n", &b);
   //pthread_create(&t, NULL, f, NULL);
   for(int i = 0; i<1e9; i++, b++);
   printf("%d\n", b);

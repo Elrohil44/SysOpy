@@ -16,7 +16,7 @@ pid_t tracee(char** argv, int mem_limit)
   {
     if (mem_limit) setlimit(mem_limit);
     ptrace(PTRACE_TRACEME, 0, NULL, NULL);
-    raise(SIGSTOP);
+    kill(getpid(), SIGSTOP);
     execvp(*argv, argv);
     perror("Error execve:");
     exit(EXIT_FAILURE);
