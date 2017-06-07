@@ -13,7 +13,7 @@ int main(int argc, char const *argv[]) {
   char a[2];
   fflush(stdout);
   fprintf(stdout, "%s\n", "fprintf");
-  scanf(" %d\n", &b);
+  scanf(" %d", &b);
   for(int i = 0; i<1e9; i++, b++);
   printf("%d\n", b);
   printf("%d [%d]\n", 12, 1);
