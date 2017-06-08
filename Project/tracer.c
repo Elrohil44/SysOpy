@@ -63,15 +63,18 @@ void trace(pid_t tracee, int timeout)
 
 int check_syscall(struct user_regs_struct regs)
 {
-  switch (regs.orig_rax) {
+  switch (regs.orig_rax) 
+  {
+    case SYS_writev:
     case SYS_write:
-      if(regs.rdi != STDOUT_FILENO)
+      if(regs.rdi != STDOUT_FILENO && regs.rdi !=STDERR_FILENO)
       {
         printf("You are not allowed to call write\n");
         printf("with first argument equal to: %lld\n", regs.rdi);
         return -1;
       }
       break;
+    case SYS_readv:
     case SYS_read:
       if(regs.rdi != STDIN_FILENO && regs.rdi != opened)
       {
@@ -131,6 +134,11 @@ int check_syscall(struct user_regs_struct regs)
     case SYS_mmap:
     case SYS_brk:
     case SYS_access:
+    case SYS_set_tid_address:
+    case SYS_set_robust_list:
+    case SYS_rt_sigaction:
+    case SYS_rt_sigprocmask:
+    case SYS_getrlimit:
       break;
     default:
       return -1;
