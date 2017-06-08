@@ -1,11 +1,14 @@
 #include "load.h"
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <string.h>
 
 pid_t TRACEE;
 const int FLAGS = PTRACE_O_TRACESYSGOOD | PTRACE_O_EXITKILL;
 long long opened = 0;
 
+sigset_t set;
+void init_sigset(sigset_t* set);
 void handler(int signo);
 int wait_for_syscall(pid_t child);
 int check_syscall(struct user_regs_struct regs);
@@ -20,15 +23,19 @@ void trace(pid_t tracee, int timeout)
 {
   if (tracee <= 0) return;
   TRACEE = tracee;
+  init_sigset(&set);
   int entering = 1;
   int exec = 0;
+  int signo;
   struct user_regs_struct regs;
   ptrace(PTRACE_SETOPTIONS, TRACEE, 0, FLAGS);
   while(1)
   {
-    if(wait_for_syscall(TRACEE))
+    if((signo = wait_for_syscall(TRACEE)))
     {
-      printf("Tracee received SIGSEGV\n");
+      fprintf(stderr, "Tracee received: %s\n", strsignal(signo));
+      fprintf(stderr, "Press return to exit...\n");
+      getchar();
       break;
     }
     ptrace(PTRACE_GETREGS, TRACEE, 0, &regs);
@@ -44,8 +51,10 @@ void trace(pid_t tracee, int timeout)
       {
         if(check_syscall(regs))
         {
-          printf("Forbidden operation for syscall: %lld\n", regs.orig_rax);
-          printf("Sending SIGKILL to Tracee...\n");
+          fprintf(stderr, "Forbidden operation for syscall: %lld\n", regs.orig_rax);
+	  fprintf(stderr, "Press return to exit... \n");
+	  getchar();
+          fprintf(stderr, "Sending SIGKILL to Tracee...\n");
           kill(TRACEE, SIGKILL);
           break;
         }
@@ -69,8 +78,8 @@ int check_syscall(struct user_regs_struct regs)
     case SYS_write:
       if(regs.rdi != STDOUT_FILENO && regs.rdi !=STDERR_FILENO)
       {
-        printf("You are not allowed to call write\n");
-        printf("with first argument equal to: %lld\n", regs.rdi);
+        fprintf(stderr, "You are not allowed to call write\n");
+        fprintf(stderr, "with first argument equal to: %lld\n", regs.rdi);
         return -1;
       }
       break;
@@ -78,8 +87,8 @@ int check_syscall(struct user_regs_struct regs)
     case SYS_read:
       if(regs.rdi != STDIN_FILENO && regs.rdi != opened)
       {
-        printf("You are not allowed to call read\n");
-        printf("with first argument equal to: %lld\n", regs.rdi);
+        fprintf(stderr, "You are not allowed to call read\n");
+        fprintf(stderr, "with first argument equal to: %lld\n", regs.rdi);
         return -1;
       }
       break;
@@ -88,25 +97,25 @@ int check_syscall(struct user_regs_struct regs)
       {
         if(((regs.rsi & (~O_RDONLY)) & (~O_CLOEXEC)))
         {
-          printf("You are not allowed to call open with these FLAGS\n");
+          fprintf(stderr, "You are not allowed to call open with these FLAGS\n");
           return -1;
         }
       }
       else
       {
-        printf("You are not allowed to open more than 1 file\n");
+        fprintf(stderr, "You are not allowed to open more than 1 file\n");
         return -1;
       }
       break;
     case SYS_close:
       if(!opened)
       {
-        printf("You are not allowed to close not opened file\n");
+        fprintf(stderr, "You are not allowed to close not opened file\n");
         return -1;
       }
       else if(regs.rdi != opened)
       {
-        printf("You are not allowed to close this descriptor\n");
+        fprintf(stderr, "You are not allowed to close this descriptor\n");
         return -1;
       }
       opened = 0;
@@ -116,12 +125,12 @@ int check_syscall(struct user_regs_struct regs)
       {
         if(!opened)
         {
-          printf("You are not allowed to fstat not opened file\n");
+          fprintf(stderr, "You are not allowed to fstat not opened file\n");
           return -1;
         }
         else if(regs.rdi != opened)
         {
-          printf("You are not allowed to fstat this descriptor\n");
+          fprintf(stderr, "You are not allowed to fstat this descriptor\n");
           return -1;
         }
       }
@@ -158,16 +167,20 @@ int wait_for_syscall(pid_t child)
     };
     if(WIFEXITED(status))
     {
-      printf("Tracee has exited\n");
+      fprintf(stderr, "Tracee has exited\n");
       exit(EXIT_SUCCESS);
     }
     if(WIFSIGNALED(status))
     {
-      printf("Tracee has been terminated with signal\n");
+      fprintf(stderr, "Tracee has been terminated with signal\n");
       exit(EXIT_SUCCESS);
     }
     if(WIFSTOPPED(status) && (WSTOPSIG(status) & 0x80)) return 0;
-    if(WIFSTOPPED(status) && WSTOPSIG(status) == SIGSEGV) return -1;
+    if(WIFSTOPPED(status))
+    {
+      if(sigismember(&set, WSTOPSIG(status)))
+        return WSTOPSIG(status);
+    }
   }
 }
 
@@ -184,7 +197,7 @@ int isNumber(const char* arg)
 
 void handler(int signo)
 {
-  printf("Timeout exceeded\n");
+  fprintf(stderr, "Timeout exceeded\n");
   if(TRACEE) kill(TRACEE, SIGKILL);
 }
 
@@ -200,3 +213,20 @@ void printusage(char* name, int exiting)
   printf("\n\n\t ARG - Argument for isolated program\n");
   if(exiting) exit(exiting);
 }
+
+void init_sigset(sigset_t* set)
+{
+  sigemptyset(set);
+  sigaddset(set, SIGINT);
+  sigaddset(set, SIGTERM);
+  sigaddset(set, SIGHUP);
+  sigaddset(set, SIGQUIT);
+  sigaddset(set, SIGILL);
+  sigaddset(set, SIGABRT);
+  sigaddset(set, SIGFPE);
+  sigaddset(set, SIGSEGV);
+  sigaddset(set, SIGPIPE);
+  sigaddset(set, SIGUSR1);
+  sigaddset(set, SIGUSR2);
+}
+
