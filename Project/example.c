@@ -38,8 +38,8 @@ int main(int argc, char const *argv[]) {
   printf("%d\n", b);
   printf("%d [%d]\n", 12, 1);
   char iop[3*1024*1024];
-  int fd = open("xD.txt", O_WRONLY);
-  iop[0] = 5/0;
+  int fd = open("xD.txt", O_RDONLY);
+  printf("%d\n", fd);
   printf("%d [%d]\n", b, 1);
   return 0;
 }
