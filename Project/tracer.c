@@ -116,24 +116,8 @@ int check_syscall(struct user_regs_struct regs)
       }
       break;
     case SYS_close:
-      if(opened)
-      {
-        if(regs.rdi == opened)
-        {
-          opened = 0;
-          break;
-        }
-        else
-        {
-          fprintf(stderr, "You are not allowed to close this descriptor\n");
-          return -1;
-        }
-      }
-      else
-      {
-        fprintf(stderr, "You are not allowed to close not opened file\n");
-        return -1;
-      }
+      if(opened && regs.rdi == opened) opened = 0;
+      break;
     case SYS_fstat:
       if(regs.rdi != STDIN_FILENO && regs.rdi != STDOUT_FILENO)
       {
