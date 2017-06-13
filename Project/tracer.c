@@ -6,6 +6,7 @@
 pid_t TRACEE;
 const int FLAGS = PTRACE_O_TRACESYSGOOD | PTRACE_O_EXITKILL;
 long long opened = 0;
+int terminated = 0;
 
 sigset_t set;
 void init_sigset(sigset_t* set);
@@ -33,6 +34,7 @@ void trace(pid_t tracee, int timeout)
   {
     if((signo = wait_for_syscall(TRACEE)))
     {
+      terminated = 1;
       fprintf(stderr, "Tracee received: %s\n", strsignal(signo));
       fprintf(stderr, "Press return to exit...\n");
       getchar();
@@ -51,9 +53,10 @@ void trace(pid_t tracee, int timeout)
       {
         if(check_syscall(regs))
         {
+          terminated = 1;
           fprintf(stderr, "Forbidden operation for syscall: %lld\n", regs.orig_rax);
-	  fprintf(stderr, "Press return to exit... \n");
-	  getchar();
+      	  fprintf(stderr, "Press return to exit... \n");
+      	  getchar();
           fprintf(stderr, "Sending SIGKILL to Tracee...\n");
           kill(TRACEE, SIGKILL);
           break;
@@ -72,7 +75,7 @@ void trace(pid_t tracee, int timeout)
 
 int check_syscall(struct user_regs_struct regs)
 {
-  switch (regs.orig_rax) 
+  switch (regs.orig_rax)
   {
     case SYS_writev:
     case SYS_write:
@@ -197,8 +200,11 @@ int isNumber(const char* arg)
 
 void handler(int signo)
 {
-  fprintf(stderr, "Timeout exceeded\n");
-  if(TRACEE) kill(TRACEE, SIGKILL);
+  if(!terminated)
+  {
+    fprintf(stderr, "Timeout exceeded\n");
+    if(TRACEE) kill(TRACEE, SIGKILL);
+  }
 }
 
 
@@ -229,4 +235,3 @@ void init_sigset(sigset_t* set)
   sigaddset(set, SIGUSR1);
   sigaddset(set, SIGUSR2);
 }
-

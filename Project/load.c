@@ -1,4 +1,3 @@
-
 #include "load.h"
 
 int main(int argc, char** argv)
