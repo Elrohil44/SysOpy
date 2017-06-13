@@ -60,8 +60,10 @@ void trace(pid_t tracee, int timeout)
     }
     else if(regs.orig_rax == SYS_open)
     {
-      if(regs.rax != -1)
+      if((long long)regs.rax > 0)
+      {
         opened = regs.rax;
+      }
     }
     else if(!exec && regs.orig_rax == SYS_execve)
     {
