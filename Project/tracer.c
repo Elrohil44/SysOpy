@@ -44,12 +44,7 @@ void trace(pid_t tracee, int timeout)
 
     if(entering)
     {
-      if(!exec && regs.orig_rax == SYS_execve)
-      {
-        exec = 1;
-        if(timeout) settimeout(timeout);
-      }
-      else
+      if(exec)
       {
         if(check_syscall(regs))
         {
@@ -65,9 +60,17 @@ void trace(pid_t tracee, int timeout)
     }
     else if(regs.orig_rax == SYS_open)
     {
-      opened = regs.rax;
+      if(regs.rax != -1)
+        opened = regs.rax;
     }
-
+    else if(!exec && regs.orig_rax == SYS_execve)
+    {
+      if(regs.rax == 0)
+      {
+        exec = 1;
+        if(timeout) settimeout(timeout);
+      }
+    }
     entering = 1 - entering;
   }
 }
@@ -111,18 +114,24 @@ int check_syscall(struct user_regs_struct regs)
       }
       break;
     case SYS_close:
-      if(!opened)
+      if(opened)
+      {
+        if(regs.rdi == opened)
+        {
+          opened = 0;
+          break;
+        }
+        else
+        {
+          fprintf(stderr, "You are not allowed to close this descriptor\n");
+          return -1;
+        }
+      }
+      else
       {
         fprintf(stderr, "You are not allowed to close not opened file\n");
         return -1;
       }
-      else if(regs.rdi != opened)
-      {
-        fprintf(stderr, "You are not allowed to close this descriptor\n");
-        return -1;
-      }
-      opened = 0;
-      break;
     case SYS_fstat:
       if(regs.rdi != STDIN_FILENO && regs.rdi != STDOUT_FILENO)
       {
